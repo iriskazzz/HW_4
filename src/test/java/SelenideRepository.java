@@ -1,5 +1,3 @@
-import com.codeborne.selenide.Configuration;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.text;
@@ -9,15 +7,14 @@ import static com.codeborne.selenide.Selenide.open;
 
 public class SelenideRepository {
 
-  @BeforeAll
-  static void configure() {
-    Configuration.baseUrl = "https://github.com";
-  }
-
   @Test
   void shouldFindSoftAssertions(){
     // Откройте страницу Selenide в Github
-    open("/selenide/selenide");
+    open("https://github.com");
+    $("[placeholder='Search or jump to...']").click();
+    $("#query-builder-test").setValue("selenide").pressEnter();
+    $$("div [data-testid='results-list'] div").first().$("a").click();
+    $("#repository-container-header").shouldHave(text("selenide / selenide"));
 
     // Перейдите в раздел Wiki проекта
     $("#wiki-tab").click();
@@ -30,15 +27,15 @@ public class SelenideRepository {
     $(byText("SoftAssertions")).click();
     $(".markdown-body").shouldHave(text(
             "@ExtendWith({SoftAssertsExtension.class})\n" +
-            "class Tests {\n" +
-            "  @Test\n" +
-            "  void test() {\n" +
-            "    Configuration.assertionMode = SOFT;\n" +
-            "    open(\"page.html\");\n" +
-            "\n" +
-            "    $(\"#first\").should(visible).click();\n" +
-            "    $(\"#second\").should(visible).click();\n" +
-            "  }\n" +
-            "}"));
+                    "class Tests {\n" +
+                    "  @Test\n" +
+                    "  void test() {\n" +
+                    "    Configuration.assertionMode = SOFT;\n" +
+                    "    open(\"page.html\");\n" +
+                    "\n" +
+                    "    $(\"#first\").should(visible).click();\n" +
+                    "    $(\"#second\").should(visible).click();\n" +
+                    "  }\n" +
+                    "}"));
   }
 }
